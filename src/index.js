@@ -1,3 +1,6 @@
+// start bootstrap import
+import 'bootstrap/dist/css/bootstrap.min.css';
+// End bootstrap import
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
