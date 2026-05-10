@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setAlbumList } from "../actions/albumList";
 import { setAlbumActive } from "../actions/albumInfo";
@@ -11,34 +11,35 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-function Tweet({ match }) {
+function Albums() {
   const API_KEY = "ee6c9183ead487d06053412303bf2b8e";
 
+  const { tag } = useParams();
   const albums = useSelector(state => state.albumList);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getDataApi();
-  }, [match]);
+    const getDataApi = async () => {
+      try {
+        const response = await fetch(
+          `http://ws.audioscrobbler.com/2.0/?method=tag.gettopalbums&tag=${tag}&api_key=${API_KEY}&limit=40&format=json`
+        );
+        const data = await response.json();
+        data.albums.album.forEach(x => {
+          x.image.find(y => y.size === "large")["#text"] =
+            x.image.find(y => y.size === "large")["#text"].replace(" ", "") === ""
+              ? "http://www.sclance.com/pngs/no-image-png/no_image_png_935227.png"
+              : x.image.find(y => y.size === "large")["#text"];
+        });
+        dispatch(setAlbumList(data.albums.album));
+        console.log(data.albums.album);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  const getDataApi = async () => {
-    try {
-      const response = await fetch(
-        `http://ws.audioscrobbler.com/2.0/?method=tag.gettopalbums&tag=${match.params.tag}&api_key=${API_KEY}&limit=40&format=json`
-      );
-      const data = await response.json();
-      data.albums.album.forEach(x => {
-        x.image.find(y => y.size === "large")["#text"] =
-          x.image.find(y => y.size === "large")["#text"].replace(" ", "") === ""
-            ? "http://www.sclance.com/pngs/no-image-png/no_image_png_935227.png"
-            : x.image.find(y => y.size === "large")["#text"];
-      });
-      dispatch(setAlbumList(data.albums.album));
-      console.log(data.albums.album);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    getDataApi();
+  }, [dispatch, tag]);
 
   // Set the selected album and trigger then modal
   const selectAlbum = event => {
@@ -52,7 +53,7 @@ function Tweet({ match }) {
   return (
     <Container>
       <Row className="justify-content-md-center">
-        <h3 className="SubTittle">{match.params.tag.toUpperCase()}</h3>
+        <h3 className="SubTittle">{tag.toUpperCase()}</h3>
       </Row>
       <Row className="justify-content-md-center">
         {albums.map((album, index) => (
@@ -93,4 +94,4 @@ function Tweet({ match }) {
   );
 }
 
-export default Tweet;
+export default Albums;

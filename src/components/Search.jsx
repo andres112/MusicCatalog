@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux' // import selector and disp
 import {setQuery} from '../actions/query';
 
 import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 
 function Search() {
@@ -19,21 +19,19 @@ function Search() {
         <div>
             <Container>
                 <InputGroup className="mb-6" size="sm">
-                    <FormControl
+                    <Form.Control
                         placeholder="Tag Name"
                         aria-label="Tag Name"
                         aria-describedby="basic-addon2"
                         onChange={setData}
                         value={query}
                     />
-                    <InputGroup.Append>
-                        <Link
-                            className="btn btn-dark"
-                            role="button"
-                            to={`/albums/${query}`}
-                        >Search
-                        </Link>
-                    </InputGroup.Append>
+                    <Link
+                        className="btn btn-dark"
+                        role="button"
+                        to={`/albums/${query}`}
+                    >Search
+                    </Link>
                 </InputGroup>
             </Container>
         </div>

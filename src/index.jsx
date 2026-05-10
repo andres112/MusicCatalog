@@ -2,11 +2,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 // End bootstrap import
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { createStore} from "redux";
+import { createStore } from "redux";
 import allReducer from "./reducers"; // import the reducers, it is not necessary write index, automatically find it
 import { Provider } from "react-redux"; // Provider like in context and enclose all the <App/> in there
 
@@ -15,11 +15,10 @@ const store = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
-ReactDOM.render(
-  <Provider store ={store}>
+createRoot(document.getElementById("root")).render(
+  <Provider store={store}>
     <App />
-  </Provider>,
-  document.getElementById("root")
+  </Provider>
 );
 
 // If you want your app to work offline and load faster, you can change
